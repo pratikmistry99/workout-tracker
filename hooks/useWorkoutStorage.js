@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const STORAGE_KEY = 'workout-data-v1';
+const API = 'http://localhost:3001/api/workouts';
 const DEFAULT_DATA = { history: [], lastSession: {}, active: {}, prs: {} };
 
 export function useWorkoutStorage() {
@@ -8,23 +8,20 @@ export function useWorkoutStorage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setData({ ...DEFAULT_DATA, ...JSON.parse(raw) });
-    } catch (e) {
-      // ignore parse errors
-    } finally {
-      setLoading(false);
-    }
+    fetch(API)
+      .then((r) => r.json())
+      .then((d) => setData({ ...DEFAULT_DATA, ...d }))
+      .catch((e) => console.error('Failed to load workout data:', e))
+      .finally(() => setLoading(false));
   }, []);
 
   const persist = useCallback((next) => {
     setData(next);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    } catch (e) {
-      console.error('Storage save failed', e);
-    }
+    fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(next),
+    }).catch((e) => console.error('Failed to save workout data:', e));
   }, []);
 
   return { data, loading, persist };
