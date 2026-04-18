@@ -1,28 +1,28 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
-const API = 'http://localhost:3001/api/workouts';
+const STORAGE_KEY = 'workout-data-v1';
 const DEFAULT_DATA = { history: [], lastSession: {}, active: {}, prs: {} };
 
-export function useWorkoutStorage() {
-  const [data, setData] = useState(DEFAULT_DATA);
-  const [loading, setLoading] = useState(true);
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? { ...DEFAULT_DATA, ...JSON.parse(raw) } : DEFAULT_DATA;
+  } catch {
+    return DEFAULT_DATA;
+  }
+}
 
-  useEffect(() => {
-    fetch(API)
-      .then((r) => r.json())
-      .then((d) => setData({ ...DEFAULT_DATA, ...d }))
-      .catch((e) => console.error('Failed to load workout data:', e))
-      .finally(() => setLoading(false));
-  }, []);
+export function useWorkoutStorage() {
+  const [data, setData] = useState(load);
 
   const persist = useCallback((next) => {
     setData(next);
-    fetch(API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(next),
-    }).catch((e) => console.error('Failed to save workout data:', e));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    } catch (e) {
+      console.error('Storage save failed', e);
+    }
   }, []);
 
-  return { data, loading, persist };
+  return { data, persist };
 }

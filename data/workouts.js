@@ -1,15 +1,17 @@
-import { Flame, Zap, Target, Dumbbell } from 'lucide-react';
-
 export const DEFAULT_REST = 90;
 export const SET_GRID = { gridTemplateColumns: '28px 1fr 1fr 44px' };
+
+export const WORKOUT_COLORS = {
+  'upper-a': { dot: 'bg-sky-400', text: 'text-sky-400', border: 'border-sky-500/40', bar: 'bg-sky-500' },
+  'lower-a': { dot: 'bg-emerald-400', text: 'text-emerald-400', border: 'border-emerald-500/40', bar: 'bg-emerald-500' },
+  'upper-b': { dot: 'bg-violet-400', text: 'text-violet-400', border: 'border-violet-500/40', bar: 'bg-violet-500' },
+  'lower-b': { dot: 'bg-orange-400', text: 'text-orange-400', border: 'border-orange-500/40', bar: 'bg-orange-500' },
+};
 
 export const WORKOUTS = {
   'upper-a': {
     name: 'Upper A',
     subtitle: 'Strength + Upper Chest',
-    icon: Flame,
-    accent: 'bg-gradient-to-br from-sky-500 to-blue-700',
-    accentText: 'text-sky-400',
     exercises: [
       { id: 'ua-1', name: 'Incline DB Press', sets: 4, reps: '6–8', note: 'Better ROM than barbell', restTime: 180 },
       { id: 'ua-2', name: 'Weighted / Assisted Pull-Ups', sets: 3, reps: '6–8', restTime: 180 },
@@ -23,9 +25,6 @@ export const WORKOUTS = {
   'lower-a': {
     name: 'Lower A',
     subtitle: 'Glutes + Hamstrings',
-    icon: Zap,
-    accent: 'bg-gradient-to-br from-emerald-500 to-teal-700',
-    accentText: 'text-emerald-400',
     exercises: [
       { id: 'la-1', name: 'Hack / Pendulum Squat', sets: 4, reps: '6–8', note: 'Main quad driver', restTime: 180 },
       { id: 'la-2', name: 'Romanian Deadlift', sets: 3, reps: '8', note: 'DB or BB', restTime: 180 },
@@ -38,9 +37,6 @@ export const WORKOUTS = {
   'upper-b': {
     name: 'Upper B',
     subtitle: 'Hypertrophy / Aesthetics',
-    icon: Target,
-    accent: 'bg-gradient-to-br from-violet-500 to-purple-700',
-    accentText: 'text-violet-400',
     exercises: [
       { id: 'ub-1', name: 'Incline Machine Press / Cable Fly', sets: 3, reps: '10–12', restTime: 90 },
       { id: 'ub-2', name: 'Lat Pulldown', sets: 3, reps: '10–12', note: 'Neutral or wide', restTime: 90 },
@@ -54,9 +50,6 @@ export const WORKOUTS = {
   'lower-b': {
     name: 'Lower B',
     subtitle: 'Quad Focus + Glute Finish',
-    icon: Dumbbell,
-    accent: 'bg-gradient-to-br from-orange-500 to-rose-700',
-    accentText: 'text-orange-400',
     exercises: [
       { id: 'lb-1', name: 'Hack Squat (higher reps)', sets: 3, reps: '10–12', restTime: 150 },
       { id: 'lb-2', name: 'Leg Press (Feet low)', sets: 3, reps: '12–15', restTime: 120 },
@@ -67,3 +60,15 @@ export const WORKOUTS = {
     ],
   },
 };
+
+export function getEffectiveWorkouts(customizations = {}) {
+  const result = {};
+  for (const [id, workout] of Object.entries(WORKOUTS)) {
+    if (customizations[id]?.exercises) {
+      result[id] = { ...workout, exercises: customizations[id].exercises };
+    } else {
+      result[id] = workout;
+    }
+  }
+  return result;
+}
