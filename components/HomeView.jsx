@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChevronRight, Calculator, Trophy, Clock } from 'lucide-react';
 import { WORKOUT_COLORS } from '../data/workouts';
+import { AccountMenu } from './AccountMenu';
 
 function formatDuration(ms) {
   const mins = Math.round(ms / 60000);
@@ -45,7 +46,7 @@ function computeStreak(history) {
   return streak;
 }
 
-export function HomeView({ active, history, workouts, onSelect, onViewHistory, onViewPRs, onPlateCalc }) {
+export function HomeView({ active, history, workouts, onSelect, onViewHistory, onViewPRs, onPlateCalc, user, onLogout }) {
   const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
   const thisWeek = history.filter((h) => (h.finishedAt || 0) > weekAgo).length;
   const volume = computeWeeklyVolume(history);
@@ -54,15 +55,20 @@ export function HomeView({ active, history, workouts, onSelect, onViewHistory, o
   return (
     <div className="max-w-lg mx-auto px-5 pt-10 pb-16">
       {/* Header */}
-      <div className="mb-10">
-        <h1 className="font-display text-4xl text-zinc-100 tracking-tight">Workout</h1>
-        <p className="text-xs text-zinc-600 mt-1 uppercase tracking-widest">
-          {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
-        </p>
+      <div className="mb-10 animate-fadeSlideUp flex items-start justify-between relative z-30">
+        <div>
+          <h1 className="font-display text-4xl text-zinc-100 tracking-tight">
+            Welcome, {user?.name || 'Athlete'}
+          </h1>
+          <p className="text-xs text-zinc-600 mt-1 uppercase tracking-widest">
+            {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
+          </p>
+        </div>
+        {user && <AccountMenu user={user} onLogout={onLogout} />}
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-3 gap-px bg-zinc-800/30 rounded-lg overflow-hidden mb-10">
+      <div className="grid grid-cols-3 gap-px bg-zinc-800/30 rounded-lg overflow-hidden mb-10 animate-fadeSlideUp" style={{ animationDelay: '80ms' }}>
         <div className="bg-[#09090b] px-4 py-3">
           <div className="font-display text-2xl text-zinc-100 tabular-nums">{thisWeek}</div>
           <div className="text-[10px] uppercase tracking-widest text-zinc-600 mt-0.5">This week</div>
@@ -80,7 +86,7 @@ export function HomeView({ active, history, workouts, onSelect, onViewHistory, o
       </div>
 
       {/* Workout list */}
-      <div className="mb-10">
+      <div className="mb-10 animate-fadeSlideUp" style={{ animationDelay: '160ms' }}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-[10px] uppercase tracking-widest text-zinc-500 font-medium">Programs</h2>
         </div>
@@ -125,7 +131,7 @@ export function HomeView({ active, history, workouts, onSelect, onViewHistory, o
       </div>
 
       {/* Quick links */}
-      <div className="grid grid-cols-3 gap-2 mb-10">
+      <div className="grid grid-cols-3 gap-2 mb-10 animate-fadeSlideUp" style={{ animationDelay: '240ms' }}>
         <button
           onClick={onViewPRs}
           className="flex flex-col items-center gap-1.5 py-3 rounded-lg border border-zinc-800/50 text-zinc-500 active:text-zinc-300 active:border-zinc-700 transition"
@@ -151,7 +157,7 @@ export function HomeView({ active, history, workouts, onSelect, onViewHistory, o
 
       {/* Recent sessions */}
       {history.length > 0 && (
-        <div>
+        <div className="animate-fadeSlideUp" style={{ animationDelay: '320ms' }}>
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-[10px] uppercase tracking-widest text-zinc-500 font-medium">Recent</h2>
             {history.length > 5 && (

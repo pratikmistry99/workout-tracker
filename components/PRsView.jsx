@@ -116,7 +116,7 @@ export function PRsView({ history, workouts, onBack }) {
 
   return (
     <div className="max-w-lg mx-auto px-5 pt-6 pb-16">
-      <div className="flex items-center gap-3 mb-8">
+      <div className="flex items-center gap-3 mb-8 animate-fadeSlideUp">
         <button onClick={onBack} className="flex items-center gap-1 text-zinc-500 -ml-1 py-1 active:text-zinc-100">
           <ChevronLeft className="w-4 h-4" />
           <span className="text-xs">Back</span>
@@ -130,7 +130,7 @@ export function PRsView({ history, workouts, onBack }) {
         </div>
       ) : (
         <div className="space-y-10">
-          {Object.entries(grouped).map(([wId, exercises]) => {
+          {Object.entries(grouped).map(([wId, exercises], gIdx) => {
             const w = workouts[wId];
             if (!w) return null;
             const colors = WORKOUT_COLORS[wId] || {};
@@ -138,7 +138,7 @@ export function PRsView({ history, workouts, onBack }) {
             if (activeExercises.length === 0) return null;
 
             return (
-              <div key={wId}>
+              <div key={wId} className="animate-fadeSlideUp" style={{ animationDelay: `${gIdx * 100}ms` }}>
                 <div className="flex items-center gap-2 mb-4">
                   <div className={`w-1.5 h-1.5 rounded-full ${colors.dot || 'bg-zinc-600'}`} />
                   <h2 className="text-xs uppercase tracking-widest text-zinc-500 font-medium">{w.name}</h2>

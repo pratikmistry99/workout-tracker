@@ -9,3 +9,52 @@
     -moz-osx-font-smoothing: grayscale;
   }
 }
+
+/* Splash screen */
+@keyframes splashFadeIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes splashLetters {
+  from { opacity: 0; transform: translateY(10px); letter-spacing: 0.3em; }
+  to   { opacity: 1; transform: translateY(0); letter-spacing: 0.18em; }
+}
+@keyframes splashTagline {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 0.5; transform: translateY(0); }
+}
+@keyframes splashFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+.splash-icon  { animation: splashFadeIn 0.6s cubic-bezier(0.16,1,0.3,1) both; }
+.splash-title { animation: splashLetters 0.6s cubic-bezier(0.16,1,0.3,1) 0.2s both; }
+.splash-tag   { animation: splashTagline 0.5s ease-out 0.55s both; }
+.splash-out   { animation: splashFadeOut 0.35s ease-in 1.45s both; }
+
+/* Page transitions */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92) translateY(4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes viewEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+
+.animate-fadeSlideUp { animation: fadeSlideUp 0.45s cubic-bezier(0.16,1,0.3,1) both; }
+.animate-fadeIn      { animation: fadeIn 0.3s ease-out both; }
+.animate-scaleIn     { animation: scaleIn 0.25s cubic-bezier(0.16,1,0.3,1) both; }
+.animate-viewEnter   { animation: viewEnter 0.35s cubic-bezier(0.16,1,0.3,1) both; }

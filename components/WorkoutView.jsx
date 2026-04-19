@@ -70,12 +70,12 @@ export function WorkoutView({
       </header>
 
       <div className="px-4 py-4 space-y-2">
-        {workout.exercises.map((ex) => {
+        {workout.exercises.map((ex, i) => {
           const sets = active.sets[ex.id] ||
             Array.from({ length: ex.sets }, () => ({ weight: '', reps: '', done: false }));
           return (
+            <div key={ex.id} className="animate-fadeSlideUp" style={{ animationDelay: `${i * 60}ms` }}>
             <ExerciseCard
-              key={ex.id}
               exercise={ex}
               sets={sets}
               lastSession={lastSession[ex.id]}
@@ -83,6 +83,7 @@ export function WorkoutView({
               onUpdateSet={(idx, patch) => onUpdateSet(ex.id, idx, patch)}
               onCompleteSet={onCompleteSet}
             />
+            </div>
           );
         })}
 

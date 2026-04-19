@@ -1,7 +1,10 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { WORKOUTS, DEFAULT_REST, getEffectiveWorkouts } from './data/workouts';
+import { useAuth } from './hooks/useAuth';
 import { useWorkoutStorage } from './hooks/useWorkoutStorage';
 import { useWorkoutCustomizations } from './hooks/useWorkoutCustomizations';
+import { SplashScreen } from './components/SplashScreen';
+import { LoginView } from './components/LoginView';
 import { HomeView } from './components/HomeView';
 import { HistoryView } from './components/HistoryView';
 import { WorkoutView } from './components/WorkoutView';
@@ -15,12 +18,16 @@ function vibrate(ms) {
 }
 
 export default function App() {
-  const { data, persist } = useWorkoutStorage();
-  const { customs, saveCustoms, resetCustoms } = useWorkoutCustomizations();
+  const [showSplash, setShowSplash] = useState(true);
+  const { user, login, signup, logout } = useAuth();
+
+  const userId = user?.userId || null;
+  const { data, persist } = useWorkoutStorage(userId);
+  const { customs, saveCustoms, resetCustoms } = useWorkoutCustomizations(userId);
   const workouts = useMemo(() => getEffectiveWorkouts(customs), [customs]);
 
   const [currentWorkoutId, setCurrentWorkoutId] = useState(null);
-  const [view, setView] = useState('home'); // 'home' | 'history' | 'prs'
+  const [view, setView] = useState('home');
   const [editingWorkoutId, setEditingWorkoutId] = useState(null);
   const [showPlateCalc, setShowPlateCalc] = useState(false);
   const [restSeconds, setRestSeconds] = useState(0);
@@ -138,7 +145,6 @@ export default function App() {
     if (next > restInitial) setRestInitial(next);
   };
 
-  // Exercise customization handlers
   const handleSaveExercises = (workoutId, exercises) => {
     saveCustoms(workoutId, exercises);
     setEditingWorkoutId(null);
@@ -149,7 +155,17 @@ export default function App() {
     setEditingWorkoutId(null);
   };
 
-  // Render
+  // Splash screen
+  if (showSplash) {
+    return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  }
+
+  // Auth gate
+  if (!user) {
+    return <LoginView onLogin={login} onSignup={signup} />;
+  }
+
+  // Main app
   let content;
   if (currentWorkoutId && data.active[currentWorkoutId]) {
     content = (
@@ -184,13 +200,17 @@ export default function App() {
         onViewHistory={() => setView('history')}
         onViewPRs={() => setView('prs')}
         onPlateCalc={() => setShowPlateCalc(true)}
+        user={user}
+        onLogout={logout}
       />
     );
   }
 
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-100 font-sans">
-      {content}
+      <div key={currentWorkoutId || view} className="animate-viewEnter">
+        {content}
+      </div>
 
       {restSeconds > 0 && (
         <RestBar

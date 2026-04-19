@@ -11,7 +11,7 @@ function formatDuration(ms) {
 export function HistoryView({ history, workouts, onBack }) {
   return (
     <div className="max-w-lg mx-auto px-5 pt-6 pb-16">
-      <div className="flex items-center gap-3 mb-8">
+      <div className="flex items-center gap-3 mb-8 animate-fadeSlideUp">
         <button onClick={onBack} className="flex items-center gap-1 text-zinc-500 -ml-1 py-1 active:text-zinc-100">
           <ChevronLeft className="w-4 h-4" />
           <span className="text-xs">Back</span>
@@ -24,7 +24,7 @@ export function HistoryView({ history, workouts, onBack }) {
         <div className="text-zinc-600 text-center py-20 text-sm">No sessions logged yet.</div>
       ) : (
         <div className="space-y-px">
-          {history.map((h) => {
+          {history.map((h, idx) => {
             const w = workouts[h.workoutId];
             if (!w) return null;
             const colors = WORKOUT_COLORS[h.workoutId] || {};
@@ -34,7 +34,7 @@ export function HistoryView({ history, workouts, onBack }) {
             const duration = h.startedAt && h.finishedAt ? formatDuration(h.finishedAt - h.startedAt) : null;
 
             return (
-              <div key={h.finishedAt} className="flex items-start gap-3 py-3 border-b border-zinc-800/50">
+              <div key={h.finishedAt} className="flex items-start gap-3 py-3 border-b border-zinc-800/50 animate-fadeSlideUp" style={{ animationDelay: `${Math.min(idx, 10) * 40}ms` }}>
                 <div className={`w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0 ${colors.dot || 'bg-zinc-600'}`} />
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-medium text-zinc-200">{w.name}</div>
