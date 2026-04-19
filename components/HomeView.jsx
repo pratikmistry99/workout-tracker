@@ -53,44 +53,42 @@ export function HomeView({ active, history, workouts, onSelect, onViewHistory, o
   const streak = computeStreak(history);
 
   return (
-    <div className="max-w-lg mx-auto px-5 pt-10 pb-16">
+    <div className="max-w-lg mx-auto px-5 pt-8 pb-20">
       {/* Header */}
-      <div className="mb-10 animate-fadeSlideUp flex items-start justify-between relative z-30">
+      <div className="mb-8 animate-fadeSlideUp flex items-start justify-between relative z-30">
         <div>
-          <h1 className="font-display text-4xl text-zinc-100 tracking-tight">
-            Welcome, {user?.name || 'Athlete'}
-          </h1>
-          <p className="text-xs text-zinc-600 mt-1 uppercase tracking-widest">
+          <p className="text-xs text-zinc-500 mb-1 uppercase tracking-widest font-medium">
             {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
           </p>
+          <h1 className="font-display text-4xl text-zinc-100 tracking-tight leading-tight">
+            Welcome, <span className="text-blue-400">{user?.name || 'Athlete'}</span>
+          </h1>
         </div>
         {user && <AccountMenu user={user} onLogout={onLogout} />}
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-3 gap-px bg-zinc-800/30 rounded-lg overflow-hidden mb-10 animate-fadeSlideUp" style={{ animationDelay: '80ms' }}>
-        <div className="bg-[#09090b] px-4 py-3">
-          <div className="font-display text-2xl text-zinc-100 tabular-nums">{thisWeek}</div>
-          <div className="text-[10px] uppercase tracking-widest text-zinc-600 mt-0.5">This week</div>
+      <div className="grid grid-cols-3 gap-3 mb-10 animate-fadeSlideUp" style={{ animationDelay: '80ms' }}>
+        <div className="bg-zinc-900/60 border border-zinc-800/60 rounded-2xl px-4 py-4">
+          <div className="font-display text-3xl text-zinc-100 tabular-nums">{thisWeek}</div>
+          <div className="text-xs uppercase tracking-widest text-zinc-500 mt-1 font-medium">This week</div>
         </div>
-        <div className="bg-[#09090b] px-4 py-3">
-          <div className="font-mono text-lg text-zinc-100 tabular-nums font-semibold">
+        <div className="bg-zinc-900/60 border border-zinc-800/60 rounded-2xl px-4 py-4">
+          <div className="font-mono text-xl text-zinc-100 tabular-nums font-semibold mt-1">
             {volume > 0 ? `${(volume / 1000).toFixed(1)}k` : '—'}
           </div>
-          <div className="text-[10px] uppercase tracking-widest text-zinc-600 mt-0.5">Volume lb</div>
+          <div className="text-xs uppercase tracking-widest text-zinc-500 mt-1 font-medium">Volume lb</div>
         </div>
-        <div className="bg-[#09090b] px-4 py-3">
-          <div className="font-display text-2xl text-zinc-100 tabular-nums">{streak || '—'}</div>
-          <div className="text-[10px] uppercase tracking-widest text-zinc-600 mt-0.5">Wk streak</div>
+        <div className="bg-zinc-900/60 border border-zinc-800/60 rounded-2xl px-4 py-4">
+          <div className="font-display text-3xl text-zinc-100 tabular-nums">{streak || '—'}</div>
+          <div className="text-xs uppercase tracking-widest text-zinc-500 mt-1 font-medium">Wk streak</div>
         </div>
       </div>
 
       {/* Workout list */}
       <div className="mb-10 animate-fadeSlideUp" style={{ animationDelay: '160ms' }}>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[10px] uppercase tracking-widest text-zinc-500 font-medium">Programs</h2>
-        </div>
-        <div className="space-y-px">
+        <h2 className="text-xs uppercase tracking-widest text-zinc-500 font-medium mb-4">Programs</h2>
+        <div className="space-y-2.5">
           {Object.entries(workouts).map(([id, w]) => {
             const colors = WORKOUT_COLORS[id] || {};
             const a = active[id];
@@ -106,24 +104,28 @@ export function HomeView({ active, history, workouts, onSelect, onViewHistory, o
               <button
                 key={id}
                 onClick={() => onSelect(id)}
-                className="w-full flex items-center gap-3 py-3.5 border-b border-zinc-800/50 text-left active:bg-zinc-900/50 transition group"
+                className={`w-full flex items-center gap-4 p-4 rounded-2xl text-left transition active:scale-[0.98] border ${
+                  inProg
+                    ? `${colors.bg || 'bg-zinc-800/50'} ${colors.border || 'border-zinc-700/50'}`
+                    : 'bg-zinc-900/40 border-zinc-800/50 active:bg-zinc-800/60'
+                }`}
               >
-                <div className={`w-1.5 h-8 rounded-full flex-shrink-0 ${colors.dot || 'bg-zinc-700'}`} />
+                <div className={`w-1.5 h-10 rounded-full flex-shrink-0 ${colors.dot || 'bg-zinc-700'}`} />
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-sm font-medium text-zinc-100">{w.name}</span>
+                  <div className="flex items-baseline gap-2.5">
+                    <span className="text-base font-medium text-zinc-100">{w.name}</span>
                     {inProg && (
-                      <span className="font-mono text-[10px] tabular-nums text-emerald-400">
+                      <span className="font-mono text-xs tabular-nums text-emerald-400 font-semibold">
                         {done}/{total}
                       </span>
                     )}
                   </div>
-                  <div className="text-xs text-zinc-500 mt-0.5">{w.subtitle}</div>
-                  <div className="text-[10px] text-zinc-600 mt-0.5 font-mono tabular-nums">
+                  <div className="text-sm text-zinc-400 mt-0.5">{w.subtitle}</div>
+                  <div className="text-xs text-zinc-500 mt-1 font-mono tabular-nums">
                     {w.exercises.length} exercises{lastDate && <span> · {lastDate}</span>}
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-zinc-700 group-active:text-zinc-500 flex-shrink-0" />
+                <ChevronRight className="w-5 h-5 text-zinc-600 flex-shrink-0" />
               </button>
             );
           })}
@@ -131,27 +133,27 @@ export function HomeView({ active, history, workouts, onSelect, onViewHistory, o
       </div>
 
       {/* Quick links */}
-      <div className="grid grid-cols-3 gap-2 mb-10 animate-fadeSlideUp" style={{ animationDelay: '240ms' }}>
+      <div className="grid grid-cols-3 gap-3 mb-10 animate-fadeSlideUp" style={{ animationDelay: '240ms' }}>
         <button
           onClick={onViewPRs}
-          className="flex flex-col items-center gap-1.5 py-3 rounded-lg border border-zinc-800/50 text-zinc-500 active:text-zinc-300 active:border-zinc-700 transition"
+          className="flex flex-col items-center gap-2 py-5 rounded-2xl border border-zinc-800/50 bg-zinc-900/30 text-zinc-400 active:text-amber-400 active:border-amber-500/30 active:bg-amber-500/5 transition active:scale-95"
         >
-          <Trophy className="w-4 h-4" />
-          <span className="text-[10px] uppercase tracking-widest font-medium">Records</span>
+          <Trophy className="w-5 h-5" />
+          <span className="text-xs uppercase tracking-widest font-medium">Records</span>
         </button>
         <button
           onClick={onViewHistory}
-          className="flex flex-col items-center gap-1.5 py-3 rounded-lg border border-zinc-800/50 text-zinc-500 active:text-zinc-300 active:border-zinc-700 transition"
+          className="flex flex-col items-center gap-2 py-5 rounded-2xl border border-zinc-800/50 bg-zinc-900/30 text-zinc-400 active:text-blue-400 active:border-blue-500/30 active:bg-blue-500/5 transition active:scale-95"
         >
-          <Clock className="w-4 h-4" />
-          <span className="text-[10px] uppercase tracking-widest font-medium">History</span>
+          <Clock className="w-5 h-5" />
+          <span className="text-xs uppercase tracking-widest font-medium">History</span>
         </button>
         <button
           onClick={onPlateCalc}
-          className="flex flex-col items-center gap-1.5 py-3 rounded-lg border border-zinc-800/50 text-zinc-500 active:text-zinc-300 active:border-zinc-700 transition"
+          className="flex flex-col items-center gap-2 py-5 rounded-2xl border border-zinc-800/50 bg-zinc-900/30 text-zinc-400 active:text-purple-400 active:border-purple-500/30 active:bg-purple-500/5 transition active:scale-95"
         >
-          <Calculator className="w-4 h-4" />
-          <span className="text-[10px] uppercase tracking-widest font-medium">Plates</span>
+          <Calculator className="w-5 h-5" />
+          <span className="text-xs uppercase tracking-widest font-medium">Plates</span>
         </button>
       </div>
 
@@ -159,14 +161,14 @@ export function HomeView({ active, history, workouts, onSelect, onViewHistory, o
       {history.length > 0 && (
         <div className="animate-fadeSlideUp" style={{ animationDelay: '320ms' }}>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-[10px] uppercase tracking-widest text-zinc-500 font-medium">Recent</h2>
+            <h2 className="text-xs uppercase tracking-widest text-zinc-500 font-medium">Recent</h2>
             {history.length > 5 && (
-              <button onClick={onViewHistory} className="text-[10px] text-zinc-600 active:text-zinc-400 uppercase tracking-widest">
+              <button onClick={onViewHistory} className="text-xs text-zinc-500 active:text-zinc-300 uppercase tracking-widest font-medium py-1 px-2">
                 All
               </button>
             )}
           </div>
-          <div className="space-y-px">
+          <div className="space-y-1">
             {history.slice(0, 5).map((h) => {
               const w = workouts[h.workoutId];
               if (!w) return null;
@@ -176,16 +178,16 @@ export function HomeView({ active, history, workouts, onSelect, onViewHistory, o
               const duration = h.startedAt && h.finishedAt ? formatDuration(h.finishedAt - h.startedAt) : null;
 
               return (
-                <div key={h.finishedAt} className="flex items-center gap-3 py-2.5 border-b border-zinc-800/30">
-                  <div className={`w-1 h-1 rounded-full flex-shrink-0 ${colors.dot || 'bg-zinc-700'}`} />
+                <div key={h.finishedAt} className="flex items-center gap-3 py-3 px-3 rounded-xl bg-zinc-900/20">
+                  <div className={`w-2 h-2 rounded-full flex-shrink-0 ${colors.dot || 'bg-zinc-700'}`} />
                   <div className="flex-1 min-w-0">
-                    <span className="text-xs text-zinc-300">{w.name}</span>
-                    <span className="text-xs text-zinc-600 ml-2">
+                    <span className="text-sm text-zinc-200 font-medium">{w.name}</span>
+                    <span className="text-xs text-zinc-500 ml-2">
                       {d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
                       {duration && ` · ${duration}`}
                     </span>
                   </div>
-                  <span className="font-mono text-[10px] tabular-nums text-zinc-600">{done}</span>
+                  <span className="font-mono text-xs tabular-nums text-zinc-500 font-medium">{done} sets</span>
                 </div>
               );
             })}

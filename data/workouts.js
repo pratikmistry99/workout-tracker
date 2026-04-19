@@ -1,11 +1,11 @@
 export const DEFAULT_REST = 90;
-export const SET_GRID = { gridTemplateColumns: '28px 1fr 1fr 44px' };
+export const SET_GRID = { gridTemplateColumns: '32px 1fr 1fr 48px' };
 
 export const WORKOUT_COLORS = {
-  'upper-a': { dot: 'bg-sky-400', text: 'text-sky-400', border: 'border-sky-500/40', bar: 'bg-sky-500' },
-  'lower-a': { dot: 'bg-emerald-400', text: 'text-emerald-400', border: 'border-emerald-500/40', bar: 'bg-emerald-500' },
-  'upper-b': { dot: 'bg-violet-400', text: 'text-violet-400', border: 'border-violet-500/40', bar: 'bg-violet-500' },
-  'lower-b': { dot: 'bg-orange-400', text: 'text-orange-400', border: 'border-orange-500/40', bar: 'bg-orange-500' },
+  'upper-a': { dot: 'bg-blue-400', text: 'text-blue-400', border: 'border-blue-500/40', bar: 'bg-blue-500', bg: 'bg-blue-500/10', activeBg: 'bg-blue-500/15' },
+  'lower-a': { dot: 'bg-emerald-400', text: 'text-emerald-400', border: 'border-emerald-500/40', bar: 'bg-emerald-500', bg: 'bg-emerald-500/10', activeBg: 'bg-emerald-500/15' },
+  'upper-b': { dot: 'bg-purple-400', text: 'text-purple-400', border: 'border-purple-500/40', bar: 'bg-purple-500', bg: 'bg-purple-500/10', activeBg: 'bg-purple-500/15' },
+  'lower-b': { dot: 'bg-amber-400', text: 'text-amber-400', border: 'border-amber-500/40', bar: 'bg-amber-500', bg: 'bg-amber-500/10', activeBg: 'bg-amber-500/15' },
 };
 
 export const WORKOUTS = {

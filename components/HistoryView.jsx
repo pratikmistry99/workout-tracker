@@ -12,18 +12,18 @@ export function HistoryView({ history, workouts, onBack }) {
   return (
     <div className="max-w-lg mx-auto px-5 pt-6 pb-16">
       <div className="flex items-center gap-3 mb-8 animate-fadeSlideUp">
-        <button onClick={onBack} className="flex items-center gap-1 text-zinc-500 -ml-1 py-1 active:text-zinc-100">
-          <ChevronLeft className="w-4 h-4" />
-          <span className="text-xs">Back</span>
+        <button onClick={onBack} className="flex items-center gap-1.5 text-zinc-400 -ml-1 py-2 pr-3 active:text-zinc-100 transition">
+          <ChevronLeft className="w-5 h-5" />
+          <span className="text-sm font-medium">Back</span>
         </button>
         <h1 className="font-display text-2xl text-zinc-100">History</h1>
-        <span className="text-zinc-600 font-mono text-xs tabular-nums">{history.length}</span>
+        <span className="text-zinc-500 font-mono text-sm tabular-nums font-medium">{history.length}</span>
       </div>
 
       {history.length === 0 ? (
-        <div className="text-zinc-600 text-center py-20 text-sm">No sessions logged yet.</div>
+        <div className="text-zinc-500 text-center py-20 text-base">No sessions logged yet.</div>
       ) : (
-        <div className="space-y-px">
+        <div className="space-y-2">
           {history.map((h, idx) => {
             const w = workouts[h.workoutId];
             if (!w) return null;
@@ -34,19 +34,19 @@ export function HistoryView({ history, workouts, onBack }) {
             const duration = h.startedAt && h.finishedAt ? formatDuration(h.finishedAt - h.startedAt) : null;
 
             return (
-              <div key={h.finishedAt} className="flex items-start gap-3 py-3 border-b border-zinc-800/50 animate-fadeSlideUp" style={{ animationDelay: `${Math.min(idx, 10) * 40}ms` }}>
-                <div className={`w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0 ${colors.dot || 'bg-zinc-600'}`} />
+              <div key={h.finishedAt} className="flex items-start gap-3 p-4 rounded-xl bg-zinc-900/40 border border-zinc-800/40 animate-fadeSlideUp" style={{ animationDelay: `${Math.min(idx, 10) * 40}ms` }}>
+                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${colors.dot || 'bg-zinc-600'}`} />
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-zinc-200">{w.name}</div>
-                  <div className="text-xs text-zinc-600 mt-0.5">
+                  <div className="text-base font-medium text-zinc-100">{w.name}</div>
+                  <div className="text-sm text-zinc-500 mt-0.5">
                     {d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
                     {duration && <span> · {duration}</span>}
                   </div>
                   {h.notes ? (
-                    <div className="text-xs text-zinc-500 mt-1 italic truncate">"{h.notes}"</div>
+                    <div className="text-sm text-zinc-400 mt-1.5 italic truncate">"{h.notes}"</div>
                   ) : null}
                 </div>
-                <div className="font-mono text-xs tabular-nums text-zinc-500 mt-0.5">{done} sets</div>
+                <div className="font-mono text-sm tabular-nums text-zinc-400 mt-0.5 font-medium">{done} sets</div>
               </div>
             );
           })}
